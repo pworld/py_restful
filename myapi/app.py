@@ -1,6 +1,6 @@
 from flask import Flask
 
-from myapi import auth, api
+from myapi import auth, api, packages
 from myapi.extensions import db, jwt, migrate, celery
 
 
