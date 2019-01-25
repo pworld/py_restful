@@ -1,6 +1,8 @@
-from .stocks import stockList
+from .stocks import stockList, timeSeries, timeSeriesCSV
 
 
 __all__ = [
-    'stockList'
+    'stockList',
+    'timeSeries',
+    'timeSeriesCSV'
 ]

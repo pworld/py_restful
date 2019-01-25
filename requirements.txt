@@ -12,4 +12,6 @@ celery
 gunicorn
 psycopg2-binary
 SQLAlchemy-Utils
-
+requests
+simplejson
+pandas
