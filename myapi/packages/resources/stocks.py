@@ -1,6 +1,6 @@
 import os
 import requests
-import pandas as pd
+import numpy as np
 
 from flask import request, Response, jsonify, Blueprint, current_app as app
 from flask_restful import Resource
@@ -24,6 +24,7 @@ class timeSeries(Resource):
         data = {
             'symbol'  : symbol,
             'interval' : interval,
+            'analyze' : interval,
             'apikey' : os.environ.get('API_KEY'),
             'function' : function
         }
@@ -48,9 +49,10 @@ class timeSeries(Resource):
 
             DataSet.append(values)
 
-        df = pd.DataFrame(data = DataSet, columns=['Time','Open','High','Low','Close','Volume'])
+        #df = pd.DataFrame(data = DataSet, columns=['Time','Open','High','Low','Close','Volume'])
+        response = np.array(DataSet).tolist()
 
-        return DataSet
+        return response
 
 
 class stockList(Resource):
