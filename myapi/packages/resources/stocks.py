@@ -1,7 +1,6 @@
 import os
 import requests
 import pandas as pd
-import simplejson as json
 
 from flask import request, Response, jsonify, Blueprint, current_app as app
 from flask_restful import Resource
@@ -11,68 +10,71 @@ from myapi.models import User
 from myapi.extensions import ma, db
 from myapi.commons.pagination import paginate
 
-
-class stockList(Resource):
-    """test get and post
-    """
-    method_decorators = [jwt_required]
-
-    def get(self):
-        return {"msg": "try post"}
-
-    def post(self):
-        return {"msg": "try post"}
-
 class timeSeries(Resource):
     """Creation and get_all
     """
     method_decorators = [jwt_required]
 
-    def get(self):
-        return {"msg": "try post"}
-
     def post(self):
 
+        symbol = request.json.get('symbol', None)
+        interval = request.json.get('interval', None)
+        function = request.json.get('function', None)
+
         data = {
-            'symbol'  : request.json.get('symbol', None),
-            'interval' : request.json.get('interval', None),
+            'symbol'  : symbol,
+            'interval' : interval,
             'apikey' : os.environ.get('API_KEY'),
-            'function' : 'TIME_SERIES_INTRADAY'
+            'function' : function
         }
 
         url = os.environ.get('API_URL')
         headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8'}
 
-        response = Response(requests.get(url, headers=headers, params=data))
-        #df =  json.loads(response)
-        #df = json.loads(response.decode("utf-8"))
-        #import pdb; pdb.set_trace()
-        return response
+        r = requests.get(url, headers=headers, params=data)
+        response = r.json()
+        key = 'Time Series ('+interval+')'
+        data = response[key]
 
-class timeSeriesCSV(Resource):
+        DataSet = []
+        for key in data:
+            values = []
+            values.append(key)
+            values.append(data[key]['1. open'])
+            values.append(data[key]['2. high'])
+            values.append(data[key]['3. low'])
+            values.append(data[key]['4. close'])
+            values.append(data[key]['5. volume'])
+
+            DataSet.append(values)
+
+        df = pd.DataFrame(data = DataSet, columns=['Time','Open','High','Low','Close','Volume'])
+
+        return DataSet
+
+
+class stockList(Resource):
     """Creation and get_all
     """
     method_decorators = [jwt_required]
 
-    def get(self):
-        return {"msg": "try post"}
-
     def post(self):
 
+        keywords = request.json.get('keywords', None)
+        function = request.json.get('function', None)
+
         data = {
-            'symbol'  : request.json.get('symbol', None),
-            'interval' : request.json.get('interval', None),
-            'apikey' : os.environ.get('API_KEY'),
-            'function' : 'TIME_SERIES_INTRADAY',
-            'datatype' : 'csv'
+            'keywords'  : keywords,
+            'function' : function,
+            'apikey' : os.environ.get('API_KEY')
         }
 
         url = os.environ.get('API_URL')
         headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8'}
 
-        response = Response(requests.get(url, headers=headers, params=data))
+        r = requests.get(url, headers=headers, params=data)
+        response = r.json()
+        key = 'bestMatches'
+        data = response[key]
 
-        #df = pd.read_csv(pd.compat.BytesIO(response.encode('UTF-8')), header='timestamp,open,high,low,close,volume')
-        #df = pd.read_csv(pd.compat.StringIO(response), header='timestamp,open,high,low,close,volume')
-        #import pdb; pdb.set_trace()
-        return response
+        return data
