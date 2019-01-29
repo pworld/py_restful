@@ -1,4 +1,5 @@
 import os
+import json
 import requests
 import numpy as np
 
@@ -6,9 +7,14 @@ from flask import request, Response, jsonify, Blueprint, current_app as app
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
 
+import time
+from datetime import datetime
+
 from myapi.models import User
 from myapi.extensions import ma, db
-from myapi.commons.pagination import paginate
+from myapi.packages.helpers import (
+    analyze_data
+)
 
 class timeSeries(Resource):
     """Creation and get_all
@@ -20,11 +26,14 @@ class timeSeries(Resource):
         symbol = request.json.get('symbol', None)
         interval = request.json.get('interval', None)
         function = request.json.get('function', None)
+        analyze = request.json.get('analyze', None)
+        analyze_type = request.json.get('analyze_type', None)
 
         data = {
             'symbol'  : symbol,
             'interval' : interval,
-            'analyze' : interval,
+            'analyze' : analyze,
+            'analyze_type' : analyze_type,
             'apikey' : os.environ.get('API_KEY'),
             'function' : function
         }
@@ -40,17 +49,19 @@ class timeSeries(Resource):
         DataSet = []
         for key in data:
             values = []
-            values.append(key)
-            values.append(data[key]['1. open'])
-            values.append(data[key]['2. high'])
-            values.append(data[key]['3. low'])
-            values.append(data[key]['4. close'])
-            values.append(data[key]['5. volume'])
+            values.append(time.mktime(datetime.strptime(key, "%Y-%m-%d %H:%M:%S").timetuple()))
+            values.append(float(data[key]['1. open']))
+            values.append(float(data[key]['2. high']))
+            values.append(float(data[key]['3. low']))
+            values.append(float(data[key]['4. close']))
+            values.append(float(data[key]['5. volume']))
 
             DataSet.append(values)
 
-        #df = pd.DataFrame(data = DataSet, columns=['Time','Open','High','Low','Close','Volume'])
-        response = np.array(DataSet).tolist()
+        stock_type = {'open': 1, 'high': 2, 'low': 3, 'close': 4, 'volume': 5}
+        col = stock_type[analyze]
+
+        response = analyze_data(DataSet,stock_type,analyze_type,col)
 
         return response
 
