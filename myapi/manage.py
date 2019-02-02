@@ -20,6 +20,9 @@ def init():
     """
     from myapi.extensions import db
     from myapi.models import User
+    from myapi.models import Stock
+
+    db.drop_all()
     click.echo("create database")
     db.create_all()
     click.echo("done")
@@ -33,6 +36,7 @@ def init():
     )
     db.session.add(user)
     db.session.commit()
+
     click.echo("created user admin")
 
 

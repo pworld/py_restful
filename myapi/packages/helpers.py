@@ -6,22 +6,6 @@ import numpy as np
 import time
 from datetime import datetime
 
-
-def saveProcess(data):
-    """
-    Manipulating Col Array
-
-    :param data: Requests data
-    """
-
-    url = os.environ.get('API_URL')
-    headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8'}
-
-    r = requests.get(url, headers=headers, params=data)
-    response = r.json()
-
-    return response
-
 def listOrder(data):
     """
     Manipulating Col Array
@@ -56,8 +40,11 @@ def apiRequests(data):
     url = os.environ.get('API_URL')
     headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8'}
 
-    r = requests.get(url, headers=headers, params=data)
-    response = r.json()
+    try:
+        r = requests.get(url, headers=headers, params=data)
+        response = r.json()
+    except:
+        return {"msg": "request failed"}
 
     return response
 
@@ -84,6 +71,30 @@ def show_data(DataSet, col):
     }
 
     return ret
+
+def show_data_load(results):
+
+    dataSet = []
+    for value in results:
+        ret = {
+            "mean": value.mean,
+            "median": value.median,
+            "std": value.std,
+            "var": value.var,
+            "average": value.average,
+            "min": value.min,
+            "max": value.max,
+            "function": value.function,
+            "symbol": value.symbol,
+            "analyze": value.analyze,
+            "start_time": value.start_time,
+            "end_time": value.end_time,
+            "interval": value.interval,
+            "user_id": value.user_id
+        }
+        dataSet.append(ret)
+
+    return dataSet
 
 def analyze_data(DataSet, stock_type, analyze_type, col):
     """
