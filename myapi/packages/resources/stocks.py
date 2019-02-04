@@ -70,24 +70,26 @@ class timeSeriesSave(Resource):
             'function' : function
         }
         response = apiRequests(data)
-        key = 'Time Series ('+interval+')'
-        data = response[key]
 
-        DataSet = listOrder(data)
+        if(response != False):
+            key = 'Time Series ('+interval+')'
+            data = response[key]
 
-        stock_type = {'open': 1, 'high': 2, 'low': 3, 'close': 4, 'volume': 5}
-        col = stock_type[analyze]
+            DataSet = listOrder(data)
 
-        response = show_data(DataSet[1],col)
-        response['function'] = function
-        response['symbol'] = symbol
-        response['analyze'] = analyze
-        response['start_time'] = DataSet[0][0]
-        response['end_time'] = DataSet[0][-1]
-        response['interval'] = interval
-        response['user_id'] = get_jwt_identity()
+            stock_type = {'open': 1, 'high': 2, 'low': 3, 'close': 4, 'volume': 5}
+            col = stock_type[analyze]
 
-        self.insert(response)
+            response = show_data(DataSet[1],col)
+            response['function'] = function
+            response['symbol'] = symbol
+            response['analyze'] = analyze
+            response['start_time'] = DataSet[0][0]
+            response['end_time'] = DataSet[0][-1]
+            response['interval'] = interval
+            response['user_id'] = get_jwt_identity()
+
+            self.insert(response)
         return response
 
     def insert(self,response):

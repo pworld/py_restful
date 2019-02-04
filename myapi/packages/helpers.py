@@ -44,7 +44,7 @@ def apiRequests(data):
         r = requests.get(url, headers=headers, params=data)
         response = r.json()
     except:
-        return {"msg": "request failed"}
+        return False
 
     return response
 
