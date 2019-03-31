@@ -1,0 +1,207 @@
+{
+	"info": {
+		"_postman_id": "5378b9ca-821f-4447-b263-f466f6800ec1",
+		"name": "Bootcamp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\":\"admin\",\n\t\"password\":\"admin\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}auth/login",
+							"host": [
+								"{{url}}auth"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "login"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": []
+		},
+		{
+			"name": "Stocks",
+			"item": [
+				{
+					"name": "time-series",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"function\":\"TIME_SERIES_INTRADAY\",\n\t\"symbol\":\"MSFT\",\n\t\"interval\":\"15min\",\n\t\"analyze\":\"open\",\n\t\"analyze_type\":\"mean\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}app/time-series",
+							"host": [
+								"{{url}}app"
+							],
+							"path": [
+								"time-series"
+							],
+							"query": [
+								{
+									"key": "autho",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "stocks",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"function\":\"SYMBOL_SEARCH\",\n\t\"keywords\":\"BABA\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}app/stock-list",
+							"host": [
+								"{{url}}app"
+							],
+							"path": [
+								"stock-list"
+							],
+							"query": [
+								{
+									"key": "autho",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "time-series-save",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"function\":\"TIME_SERIES_INTRADAY\",\n\t\"symbol\":\"MSFT\",\n\t\"interval\":\"15min\",\n\t\"analyze\":\"open\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}app/time-series-save",
+							"host": [
+								"{{url}}app"
+							],
+							"path": [
+								"time-series-save"
+							],
+							"query": [
+								{
+									"key": "autho",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "time-series-load",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"function\":\"TIME_SERIES_INTRADAY\",\n\t\"symbol\":\"MSFT\",\n\t\"interval\":\"15min\",\n\t\"analyze\":\"open\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}app/time-series-load",
+							"host": [
+								"{{url}}app"
+							],
+							"path": [
+								"time-series-load"
+							],
+							"query": [
+								{
+									"key": "autho",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
